@@ -1,0 +1,84 @@
+RDS and CSV fidelity inspection
+RDS dimensions: 6059765 11 
+CSV dimensions: 6059765 11 
+RDS timestamp class: POSIXct POSIXt 
+RDS timezone: UTC 
+      column rds_class csv_class rds_missing csv_missing
+    SensorID character character           0           0
+ Temperature   numeric   numeric           0           0
+          RH   numeric   numeric           0           0
+       Sense   numeric   numeric           0           0
+   Reference   numeric   numeric           0           0
+ Attenuation   numeric   numeric           0           0
+          BC   numeric   numeric           0           0
+    Smoothed   numeric   numeric      585614      585614
+    Latitude   numeric   numeric     3388529     3388529
+   Longitude   numeric   numeric     3388529     3388529
+ missing_mask_differences exact_value_differences differences_above_1e_9
+                        0                       0                     NA
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+                        0                       0                      0
+ maximum_absolute_difference
+                          NA
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+                           0
+Date-only CSV records: 63 
+Missing timestamps in RDS: 0 
+Missing timestamps in CSV: 0 
+RDS fractional-second timestamps: 0 
+Timestamp mismatches after explicitly expanding date-only CSV values for comparison: 0 
+RDS midnight records: 63 
+All affected records match other fields exactly: TRUE 
+ source_record_number  SensorID   csv_date   rds_timestamp_utc
+                84995 AL80-0004 2026-04-13 2026-04-13 00:00:00
+               182949 AL80-0004 2026-06-20 2026-06-20 00:00:00
+               211594 AL80-0004 2026-07-18 2026-07-18 00:00:00
+               230190 AL80-0004 2026-07-31 2026-07-31 00:00:00
+               305761 AL80-0008 2025-12-25 2025-12-25 00:00:00
+ rds_epoch_seconds rds_is_exact_midnight all_other_fields_exact_match
+        1776038400                  TRUE                         TRUE
+        1781913600                  TRUE                         TRUE
+        1784332800                  TRUE                         TRUE
+        1785456000                  TRUE                         TRUE
+        1766620800                  TRUE                         TRUE
+
+R formatting demonstration (not evidence of the actual export process):
+[1] "2026-04-13"
+
+Session details:
+R version 4.4.2 (2024-10-31)
+Platform: aarch64-apple-darwin20
+Running under: macOS 26.6.2
+
+Matrix products: default
+BLAS:   /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRblas.0.dylib 
+LAPACK: /Library/Frameworks/R.framework/Versions/4.4-arm64/Resources/lib/libRlapack.dylib;  LAPACK version 3.12.0
+
+locale:
+[1] C.UTF-8/C.UTF-8/C.UTF-8/C/C.UTF-8/C.UTF-8
+
+time zone: America/Los_Angeles
+tzcode source: internal
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base     
+
+other attached packages:
+[1] data.table_1.17.8
+
+loaded via a namespace (and not attached):
+[1] compiler_4.4.2
