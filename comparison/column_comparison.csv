@@ -1,0 +1,11 @@
+"column","rds_class","csv_class","rds_missing","csv_missing","missing_mask_differences","exact_value_differences","differences_above_1e_9","maximum_absolute_difference"
+"SensorID","character","character",0,0,0,0,NA,NA
+"Temperature","numeric","numeric",0,0,0,0,0,0
+"RH","numeric","numeric",0,0,0,0,0,0
+"Sense","numeric","numeric",0,0,0,0,0,0
+"Reference","numeric","numeric",0,0,0,0,0,0
+"Attenuation","numeric","numeric",0,0,0,0,0,0
+"BC","numeric","numeric",0,0,0,0,0,0
+"Smoothed","numeric","numeric",585614,585614,0,0,0,0
+"Latitude","numeric","numeric",3388529,3388529,0,0,0,0
+"Longitude","numeric","numeric",3388529,3388529,0,0,0,0

@@ -428,3 +428,11 @@ FodyWeavers.xsd
 #*.lscache
 Black Carbon Concentrations.csv
 Black Carbon Concentrations_working_copy.csv
+
+# Local source data and notebook runtime files
+data/
+*.rds
+*.RDS
+Black Carbon Concentrations*.csv
+.ipynb_checkpoints/
+.DS_Store

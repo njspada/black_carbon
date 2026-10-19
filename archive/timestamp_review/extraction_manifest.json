@@ -1,0 +1,11 @@
+{
+  "source": "Black Carbon Concentrations.csv",
+  "working_copy": "Black Carbon Concentrations_working_copy.csv",
+  "sha256": "e8997e3415d545f5508a989da805ebf64f031fa405a4078bc944ae69e80720d1",
+  "rows_scanned": 6059765,
+  "timestamp_format": "%Y-%m-%d %H:%M:%S",
+  "parse_failures": 63,
+  "missing_timestamps": 0,
+  "source_record_number": "One-based CSV data-record number, excluding the header; not a physical line number.",
+  "corrections_applied": false
+}

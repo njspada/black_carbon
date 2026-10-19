@@ -1,0 +1,13 @@
+{
+  "started_utc": "2026-10-19T19:04:37.313337+00:00",
+  "status": "match",
+  "rds": "Black Carbon Concentrations.RDS",
+  "csv": "Black Carbon Concentrations.csv",
+  "method": "Compare original row order; normalize date-only CSV text to midnight for comparison only.",
+  "sources_modified": false,
+  "sha256": {
+    "rds": "302a4bb30f6b082b96d2ccc1f981ef8ac5b65c877a2dc5bdf4555a6bf177b97d",
+    "csv": "e8997e3415d545f5508a989da805ebf64f031fa405a4078bc944ae69e80720d1"
+  },
+  "finished_utc": "2026-10-19T19:05:02.846397+00:00"
+}
