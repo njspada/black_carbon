@@ -436,3 +436,27 @@ data/
 Black Carbon Concentrations*.csv
 .ipynb_checkpoints/
 .DS_Store
+
+# Share notebooks, code, written reports, and exactly one data preview.
+*.csv
+*.tsv
+*.txt
+*.json
+*.html
+*.png
+*.pdf
+*.pptx
+*.parquet
+*.feather
+*.gz
+*.zip
+!samples/preview.csv
+/comparison/
+/duplicate_review/
+/traffic_data/raw/
+/traffic_data/all_routes/
+/traffic_data/i80/
+__pycache__/
+
+/data/
+/traffic_data/
