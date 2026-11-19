@@ -460,3 +460,13 @@ __pycache__/
 
 /data/
 /traffic_data/
+
+# Keep September local and publish only selected May presentation outputs.
+sep26/
+/may26/*
+!/may26/comparison/
+/may26/comparison/*
+!/may26/comparison/README.md
+!/may26/comparison/comparison.html
+!/may26/comparison/sensor_station_map.html
+!/scripts/may_map_template.html

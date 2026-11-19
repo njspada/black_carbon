@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>May 2026 · BC sensors and traffic stations</title>
+<style>/*LEAFLET_CSS*/</style>
+<style>
+*{box-sizing:border-box}body{margin:0;font:15px/1.5 system-ui,sans-serif;color:#203142;background:#f7f8fa}
+header{padding:18px 24px;border-bottom:1px solid #dfe4e8;background:white}h1{font-size:23px;font-weight:600;margin:0}header p{margin:4px 0 0;color:#52616b}
+main{display:grid;grid-template-columns:320px minmax(0,1fr);height:calc(100vh - 108px);min-height:620px}aside{padding:20px;overflow:auto;background:white;border-right:1px solid #dfe4e8}#map{height:100%;min-height:620px;background:#edf0ed}
+h2{font-size:15px;margin:22px 0 10px;font-weight:650}label{display:block;margin:7px 0}select,button{font:inherit;border:1px solid #c3cbd2;border-radius:5px;background:white;padding:8px;max-width:100%}select{width:100%}button{cursor:pointer;margin-top:10px;width:100%}button:hover{background:#edf3f8}input{margin-right:8px}
+.key{display:inline-block;width:12px;height:12px;margin-right:9px;vertical-align:middle;border:1px solid white;box-shadow:0 0 0 1px #597080}.bc{background:#2369c4;border-radius:50%}.east{background:#008c82;transform:rotate(45deg)}.west{background:#c56313}.context{background:#fff;border:2px solid #76838c;border-radius:50%;box-shadow:none}.line{display:inline-block;width:24px;vertical-align:middle;margin-right:8px;border-top:4px solid #bb5019}.other{border-color:#657482;border-top-width:3px}
+.small{font-size:12px;color:#536471}.note{padding:10px;background:#f0f4f7;border-radius:5px;margin-top:12px}.pair{padding:10px 0;border-bottom:1px solid #e1e6e9}.pair strong{display:block}.pair a{color:#1b5d9b}.sensor-label{font:12px system-ui,sans-serif;background:#fff;border:0;box-shadow:0 1px 3px #0003;color:#1b3654;padding:1px 4px}.station-glyph{width:13px;height:13px;border:2px solid white;box-shadow:0 0 0 1px #405363}.station-glyph.e{background:#008c82;transform:rotate(45deg)}.station-glyph.w{background:#c56313}.popup{font:13px/1.6 system-ui,sans-serif}.popup b{font-size:14px}#tile-note{display:none;color:#6e5110}.attribution{border-top:1px solid #ddd;margin-top:22px;padding-top:12px}a{color:#18568e}
+@media(max-width:760px){header{padding:12px 16px}h1{font-size:20px}main{display:flex;flex-direction:column;height:auto}aside{order:2;border-right:0}#map{height:65vh;min-height:440px;order:1}}
+</style></head><body>
+<header><h1>May 2026 · BC sensors and traffic stations</h1><p>Vallejo area · 22 BC sensors · 21 I-80 comparison stations</p></header>
+<main><aside>
+<label for="sensor"><strong>Inspect a BC sensor</strong></label><select id="sensor"><option value="">All 22 sensors</option></select>
+<button id="reset" type="button">Show full study area</button>
+<div id="details" class="note">Select a sensor or click its blue marker to see the two traffic stations used in the comparison.</div>
+<h2>Map layers</h2>
+<label><input type="checkbox" id="bc-layer" checked><span class="key bc"></span>BC sensors</label>
+<label><input type="checkbox" id="east-layer" checked><span class="key east"></span>Eastbound stations</label>
+<label><input type="checkbox" id="west-layer" checked><span class="key west"></span>Westbound stations</label>
+<label><input type="checkbox" id="i80-layer" checked><span class="line"></span>I-80, both directions</label>
+<label><input type="checkbox" id="roads-layer" checked><span class="line other"></span>SR-29 · SR-37 · I-780</label>
+<label><input type="checkbox" id="context-layer"><span class="key context"></span>Other nearby mainline stations</label>
+<label><input type="checkbox" id="bounds-layer">Original traffic filter boundary</label>
+<label><input type="checkbox" id="links-layer" checked>Selected sensor’s match lines</label>
+<label><input type="checkbox" id="labels-layer">Show sensor names</label>
+<label><input type="checkbox" id="basemap-layer" checked>Street basemap</label>
+<p id="tile-note" class="small">Street basemap unavailable. The embedded highway routes, sensors and stations remain available.</p>
+<div class="note small">Dashed match lines show straight-line pairing distances—not road routes, travel paths or emission plumes. Matching used only the 21 comparison stations. Optional nearby stations are context, not new matches.</div>
+<div class="attribution small">BC: recorded May coordinates; missing coordinates were not filled. Traffic locations: April 8, 2026 metadata. Route geometry: <a href="https://data.ca.gov/@caltrans/state-highway-network-postmiles" target="_blank" rel="noopener">Caltrans State Highway Network Postmiles</a>, described as an October 2022 extraction, used for geographic context. Basemap © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a>. Street tiles require internet; route and point layers are embedded.</div>
+</aside><div id="map" role="region" aria-label="Interactive map of May black carbon sensors, traffic stations, and highway routes"></div></main>
+<script>/*LEAFLET_JS*/</script>
+<script>
+const DATA=/*MAP_DATA*/;
+const esc=v=>String(v).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const map=L.map('map',{zoomControl:true}).setView([38.103,-122.235],13);
+map.createPane('roads');map.getPane('roads').style.zIndex=410;
+map.createPane('links');map.getPane('links').style.zIndex=430;
+map.createPane('sensors');map.getPane('sensors').style.zIndex=620;
+const tiles=L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:19,attribution:'© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'}).addTo(map);
+tiles.on('tileerror',()=>document.getElementById('tile-note').style.display='block');
+const groups={bc:L.layerGroup().addTo(map),east:L.layerGroup().addTo(map),west:L.layerGroup().addTo(map),context:L.layerGroup(),bounds:L.layerGroup(),links:L.layerGroup().addTo(map)};
+const routeName=n=>({80:'I-80',29:'SR-29',37:'SR-37',780:'I-780'}[n]||n);
+function roadLayer(isI80){return L.geoJSON(DATA.routes,{pane:'roads',filter:f=>(f.properties.Route===80)===isI80,style:f=>({color:isI80?'#bb5019':'#657482',weight:isI80?4.5:3,opacity:isI80?0.82:0.75}),onEachFeature:(f,l)=>l.bindTooltip(`${routeName(f.properties.Route)} · ${esc(f.properties.Direction)}<br>Caltrans route geometry`)})}
+groups.i80=roadLayer(true).addTo(map);groups.roads=roadLayer(false).addTo(map);
+L.rectangle([[38.066572,-122.275333],[38.140259,-122.200120]],{color:'#607080',weight:1.5,dashArray:'6 5',fillOpacity:0.025}).bindTooltip('Original inclusive traffic coordinate filter').addTo(groups.bounds);
+const sensorMarkers={},stationMarkers={},sensorById=Object.fromEntries(DATA.sensors.map(s=>[s.SensorID,s])),stationById=Object.fromEntries(DATA.stations.map(s=>[s.station_id,s]));
+function stationPopup(s){return `<div class="popup"><b>Station ${esc(s.station_id)} · ${esc(s.direction)}</b><br>${esc(s.station_name)}<br>${s.latitude.toFixed(6)}, ${s.longitude.toFixed(6)}<br>May: ${s.hours} hourly records<br>≥80% observed: ${s.eligible_hours} hours<br>Zero observed: ${s.zero_observed_hours} hours<br><span class="small">Location metadata: April 8, 2026</span></div>`}
+for(const s of DATA.stations){const g=s.direction==='E'?'east':'west';stationMarkers[s.station_id]=L.marker([s.latitude,s.longitude],{icon:L.divIcon({className:'',html:`<div class="station-glyph ${s.direction.toLowerCase()}"></div>`,iconSize:[13,13],iconAnchor:[6.5,6.5]}),title:`Station ${s.station_id} ${s.direction}`}).bindPopup(stationPopup(s)).bindTooltip(`${s.station_id} ${s.direction} · ${s.eligible_hours}/744 hours ≥80% observed`).addTo(groups[g]);}
+for(const s of DATA.context){L.circleMarker([s.latitude,s.longitude],{radius:4,color:'#6e7b85',weight:1.5,fillColor:'#fff',fillOpacity:0.9}).bindPopup(`<div class="popup"><b>Context station ${esc(s.station_id)}</b><br>${routeName(s.metadata_fwy)} · ${esc(s.metadata_dir)}<br>${esc(s.station_name)}<br>Not used in the current comparison</div>`).bindTooltip(`${routeName(s.metadata_fwy)} · ${s.station_id} ${s.metadata_dir}`).addTo(groups.context)}
+const selector=document.getElementById('sensor');
+for(const s of DATA.sensors){const opt=document.createElement('option');opt.value=s.SensorID;opt.textContent=s.SensorID;selector.appendChild(opt);const marker=L.circleMarker([s.Latitude,s.Longitude],{pane:'sensors',radius:7,color:'#fff',weight:2,fillColor:'#2369c4',fillOpacity:1}).addTo(groups.bc);marker.bindTooltip(s.SensorID,{className:'sensor-label',direction:'top'});marker.on('click',()=>selectSensor(s.SensorID,true));sensorMarkers[s.SensorID]=marker;}
+const studyBounds=L.latLngBounds([...DATA.sensors.map(s=>[s.Latitude,s.Longitude]),...DATA.stations.map(s=>[s.latitude,s.longitude])]);
+function fitAll(){map.fitBounds(studyBounds,{padding:[45,45]})}
+function selectSensor(id,zoom){selector.value=id;groups.links.clearLayers();for(const [key,m] of Object.entries(sensorMarkers)){m.setStyle({radius:key===id?10:7,fillColor:key===id?'#103d79':'#2369c4',weight:key===id?3:2})}
+ if(!id){document.getElementById('details').textContent='Select a sensor or click its blue marker to see the two traffic stations used in the comparison.';return}
+ const s=sensorById[id],pairs=DATA.matches.filter(p=>p.SensorID===id).sort((a,b)=>a.direction.localeCompare(b.direction));
+ let html=`<strong>${esc(id)}</strong><br><span class="small">${s.Latitude.toFixed(6)}, ${s.Longitude.toFixed(6)}<br>${s.readings.toLocaleString()} readings · ${s.hours} observed hours<br>${s.missing_coordinates.toLocaleString()} original readings lack coordinates</span>`;
+ const points=[[s.Latitude,s.Longitude]];
+ for(const p of pairs){const st=stationById[p.station_id];points.push([st.latitude,st.longitude]);L.polyline([[s.Latitude,s.Longitude],[st.latitude,st.longitude]],{pane:'links',color:p.direction==='E'?'#008c82':'#c56313',weight:2.5,dashArray:'7 6'}).bindTooltip(`${id} → ${p.station_id} ${p.direction}: ${p.distance_km.toFixed(2)} km straight line`).addTo(groups.links);html+=`<div class="pair"><strong>${p.direction==='E'?'Eastbound':'Westbound'} · <a href="#" data-station="${esc(p.station_id)}">${esc(p.station_id)}</a></strong>${p.distance_km.toFixed(2)} km to detector<br><span class="small">${esc(st.station_name)}<br>${p.hours_observed_ge80} / ${p.matched_hours} matched hours with ≥80% observed traffic</span></div>`}
+ document.getElementById('details').innerHTML=html;document.querySelectorAll('[data-station]').forEach(a=>a.addEventListener('click',e=>{e.preventDefault();const st=stationById[a.dataset.station],g=st.direction==='E'?'east':'west';groups[g].addTo(map);document.getElementById(g+'-layer').checked=true;stationMarkers[a.dataset.station].openPopup()}));
+ if(zoom)map.fitBounds(L.latLngBounds(points),{padding:[65,65],maxZoom:14});
+}
+selector.addEventListener('change',()=>selectSensor(selector.value,true));
+document.getElementById('reset').addEventListener('click',()=>{selectSensor('',false);fitAll()});
+for(const key of Object.keys(groups)){document.getElementById(key+'-layer').addEventListener('change',e=>{e.target.checked?groups[key].addTo(map):map.removeLayer(groups[key])})}
+document.getElementById('labels-layer').addEventListener('change',e=>{for(const [id,marker] of Object.entries(sensorMarkers)){marker.unbindTooltip();marker.bindTooltip(id,{permanent:e.target.checked,className:'sensor-label',direction:'top'});if(e.target.checked)marker.openTooltip()}});
+document.getElementById('basemap-layer').addEventListener('change',e=>{e.target.checked?tiles.addTo(map):map.removeLayer(tiles)});
+L.control.scale({imperial:false}).addTo(map);fitAll();
+window.mapReview={map,groups,selectSensor,counts:{sensors:DATA.sensors.length,stations:DATA.stations.length,routes:DATA.routes.features.length}};
+</script></body></html>
